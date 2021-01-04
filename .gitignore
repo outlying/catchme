@@ -1,0 +1,9 @@
+config/wilfred.config
+config/wilfred.yml
+/config
+
+.gradle/
+.idea/
+build/
+
+*.hprof
