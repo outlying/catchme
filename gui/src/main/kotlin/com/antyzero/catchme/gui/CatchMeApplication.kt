@@ -18,7 +18,8 @@ import java.time.LocalTime
 
 class CatchMeApplication : Application() {
 
-    private val applicationScope = CoroutineScope(Dispatchers.Main)
+    private val applicationScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+    private var fishingJob: Job? = null
 
     private val keyField by lazy {
         TextField().apply {
@@ -54,11 +55,12 @@ class CatchMeApplication : Application() {
         }
 
         fishButton.onAction = EventHandler {
-            applicationScope.launch(Dispatchers.Default) {
+            fishingJob?.cancel()
+            fishingJob = applicationScope.launch(Dispatchers.Default) {
                 try {
                     CatchMe(
                         throwKey = keyField.text.first().toString(),
-                        detectionAreaSideLength = 3,
+                        detectionAreaSideLength = 5,
                         sensitivity = 50.0
                     ).apply {
                         launch {
