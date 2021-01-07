@@ -10,17 +10,9 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 
 
-class OsxOperator : WowOsOperator {
+class OsxOperator : SharedOperator() {
 
     private val runtime = Runtime.getRuntime()
-    private val robot: Robot = Robot()
-
-    init {
-        robot.autoDelay = 40
-        robot.isAutoWaitForIdle = true
-
-
-    }
 
     override suspend fun focusWindow() {
         try {
@@ -51,40 +43,6 @@ class OsxOperator : WowOsOperator {
         assert(result.isNotEmpty()) { "No window position output" }
         val pair = processNumbers(result.first())
         return pair.first to (pair.second + TOP_BAR_HEIGHT)
-    }
-
-    override fun screenshot(position: Pair<Int, Int>, dimensions: Pair<Int, Int>): BufferedImage {
-        val area = Rectangle(position.first, position.second, dimensions.first, dimensions.second)
-        return robot.createScreenCapture(area)
-    }
-
-    override fun pixel(position: Pair<Int, Int>): Color {
-        return robot.getPixelColor(position.first, position.second)
-    }
-
-    override fun pressKeys(keys: String) {
-
-        val bytes: ByteArray = keys.toUpperCase().toByteArray()
-        for (b in bytes) {
-            var code = b.toInt()
-            // keycode only handles [A-Z] (which is ASCII decimal [65-90])
-            if (code in 97..122) code -= 32
-            robot.delay(40)
-            robot.keyPress(code)
-            robot.delay(40)
-            robot.keyRelease(code)
-        }
-    }
-
-    override fun moveMouse(x: Int, y: Int) {
-        robot.mouseMove(x, y)
-    }
-
-    override fun leftClick() {
-        robot.mousePress(InputEvent.BUTTON1_MASK);
-        robot.delay(200);
-        robot.mouseRelease(InputEvent.BUTTON1_MASK);
-        robot.delay(200);
     }
 
     private fun script(vararg script: String): List<String> {

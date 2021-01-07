@@ -2,6 +2,7 @@ package com.antyzero.catchme.core
 
 import com.antyzero.catchme.core.find.RedColorBobberFinder
 import com.antyzero.catchme.core.operator.OsxOperator
+import com.antyzero.catchme.core.operator.WindowsOperator
 import com.antyzero.catchme.core.operator.WowOsOperator
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,7 +37,14 @@ class CatchMe(
         get() = _message
 
     init {
-        operator = OsxOperator() // TODO select per system
+
+        val systemName = System.getProperty("os.name")
+
+        operator = when {
+            systemName.contains("windows", ignoreCase = true) -> WindowsOperator
+            systemName.contains("osx", ignoreCase = true) -> OsxOperator()
+            else -> throw IllegalStateException("Unsupported system $systemName")
+        }
 
         runBlocking {
             operator.focusWindow()
