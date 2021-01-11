@@ -43,9 +43,9 @@ abstract class SharedOperator: WowOsOperator {
     }
 
     final override fun leftClick() {
-        robot.mousePress(InputEvent.BUTTON1_MASK);
         robot.delay(200);
-        robot.mouseRelease(InputEvent.BUTTON1_MASK);
+        robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+        robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
         robot.delay(200);
     }
 }

@@ -47,7 +47,9 @@ class CatchMe(
         }
 
         runBlocking {
+            delay(1000)
             operator.focusWindow()
+            delay(1000)
             windowPosition = operator.windowPosition()
             windowSize = operator.windowSize()
         }
