@@ -58,7 +58,9 @@ class CatchMe(
         val catched = catch(threshold)
 
         if (catched) {
-            failedCatches.decrementAndGet()
+            if(failedCatches.get() > 0) {
+                failedCatches.decrementAndGet()
+            }
         } else {
             failedCatches.incrementAndGet()
         }
@@ -128,7 +130,7 @@ class CatchMe(
                 moveMouse(x, y)
                 return false
             } finally {
-                sendMessage("Highest diff: $highestDiff; Threshold: $threshold; Fails: ${failedCatches.get()}")
+                sendMessage("Highest diff: ${highestDiff.toInt()}; Threshold: $threshold; Fails: ${failedCatches.get()}")
             }
         }
 
