@@ -61,7 +61,7 @@ class CatchMeApplication : Application() {
                     CatchMe(
                         throwKey = keyField.text.first().toString(),
                         detectionAreaSideLength = 5,
-                        sensitivity = 50.0
+                        threshold = 45.0
                     ).apply {
                         launch {
                             message.collect { log ->

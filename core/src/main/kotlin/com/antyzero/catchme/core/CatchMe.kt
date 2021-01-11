@@ -17,7 +17,7 @@ import kotlin.math.*
  */
 class CatchMe(
     private val throwKey: String,
-    private var sensitivity: Double = 0.33,
+    private var threshold: Double,
     private val detectionAreaSideLength: Int = 5
 ) {
     private val operator: WowOsOperator
@@ -42,7 +42,7 @@ class CatchMe(
 
         operator = when {
             systemName.contains("windows", ignoreCase = true) -> WindowsOperator
-            systemName.contains("osx", ignoreCase = true) -> OsxOperator()
+            systemName.contains("mac", ignoreCase = true) -> OsxOperator()
             else -> throw IllegalStateException("Unsupported system $systemName")
         }
 
@@ -55,7 +55,7 @@ class CatchMe(
 
     suspend fun run() {
 
-        val catched = catch(sensitivity)
+        val catched = catch(threshold)
 
         if (catched) {
             failedCatches.decrementAndGet()
@@ -64,15 +64,15 @@ class CatchMe(
         }
 
         if (failedCatches.get() >= 3) {
-            sensitivity *= 0.9
-            sendMessage("Change sensitivity to $sensitivity")
+            threshold *= 0.9
+            sendMessage("Change threshold to $threshold")
             failedCatches.set(0)
         }
 
         delay(1000)
     }
 
-    private suspend fun catch(sensitivity: Double): Boolean {
+    private suspend fun catch(threshold: Double): Boolean {
         neutralCursorPosition()
         throwBobber()
         val bobberPosition = findBobber()
@@ -113,7 +113,7 @@ class CatchMe(
                             highestDiff = diff
                         }
 
-                    } while (diff < sensitivity)
+                    } while (diff < threshold)
 
                     delay(500)
                     moveMouse(x, y)
@@ -128,7 +128,7 @@ class CatchMe(
                 moveMouse(x, y)
                 return false
             } finally {
-                sendMessage("Highest detection: $highestDiff")
+                sendMessage("Highest diff: $highestDiff; Threshold: $threshold; Fails: ${failedCatches.get()}")
             }
         }
 
