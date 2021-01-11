@@ -130,7 +130,7 @@ class CatchMe(
                 moveMouse(x, y)
                 return false
             } finally {
-                sendMessage("Highest diff: ${highestDiff.toInt()}; Threshold: $threshold; Fails: ${failedCatches.get()}")
+                sendMessage("Highest diff: ${highestDiff.toInt()}; Threshold: ${threshold.toInt()}; Fails: ${failedCatches.get()}")
             }
         }
 
