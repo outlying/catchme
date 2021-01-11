@@ -57,14 +57,6 @@ class CatchMe(
 
         val catched = catch(threshold)
 
-        if (catched) {
-            if(failedCatches.get() > 0) {
-                failedCatches.decrementAndGet()
-            }
-        } else {
-            failedCatches.incrementAndGet()
-        }
-
         if (failedCatches.get() >= 3) {
             threshold *= 0.9
             sendMessage("Change threshold to $threshold")
@@ -124,10 +116,16 @@ class CatchMe(
                     operator.leftClick()
 
                     sendMessage("Reel in")
+
+                    if(failedCatches.get() > 0) {
+                        failedCatches.decrementAndGet()
+                    }
                 }
             } catch (e: Exception) {
                 sendMessage("Catch failed")
                 moveMouse(x, y)
+                failedCatches.incrementAndGet()
+
                 return false
             } finally {
                 sendMessage("Highest diff: ${highestDiff.toInt()}; Threshold: ${threshold.toInt()}; Fails: ${failedCatches.get()}")
