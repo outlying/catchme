@@ -6,4 +6,5 @@ config/wilfred.yml
 .idea/
 build/
 
+.DS_Store
 *.hprof

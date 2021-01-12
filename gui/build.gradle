@@ -2,7 +2,10 @@ plugins {
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.0.9'
     id 'org.jetbrains.kotlin.jvm' version '1.4.20'
+    id 'edu.sc.seis.launch4j' version '2.4.6'
 }
+
+sourceCompatibility = 11
 
 group rootProject.group
 version rootProject.version
@@ -12,6 +15,13 @@ mainClassName = 'com.antyzero.catchme.gui.CatchMeGui'
 javafx {
     version = "15.0.1"
     modules = [ 'javafx.controls' ]
+}
+
+launch4j {
+    headerType='console'
+    outfile = "catchme.exe"
+    icon = "${projectDir}/src/main/resources/images/fish.ico"
+    jar = '../libs/catchme-1.0-SNAPSHOT.jar'
 }
 
 test {
@@ -44,4 +54,8 @@ task fatJar(type: Jar) {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
     with jar
+}
+
+tasks.createExe.configure {
+    dependsOn fatJar
 }
