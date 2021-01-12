@@ -119,4 +119,12 @@ class CatchMeApplication : Application() {
         applicationScope.cancel("App ended")
         super.stop()
     }
+
+    companion object {
+
+        @JvmStatic
+        fun main(args : Array<String>) {
+            launch(CatchMeApplication::class.java, *args)
+        }
+    }
 }
