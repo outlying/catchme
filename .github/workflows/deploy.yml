@@ -46,6 +46,8 @@ jobs:
           java-version: '11'
           java-package: jdk+fx
           architecture: x64
+      - name: Build
+        run: .\gradlew.bat build
       - name: Create executable
         run: .\gradlew.bat createExe
       - name: Upload executable
