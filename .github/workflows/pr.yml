@@ -28,6 +28,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Assemble
-        run: gradlew.bat assemble
+        run: .\gradlew.bat assemble
       - name: Build
-        run: gradlew.bat build
+        run: .\gradlew.bat build
