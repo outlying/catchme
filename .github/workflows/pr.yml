@@ -13,15 +13,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '11'
+          java-package: jdk+fx
+          architecture: x64
       - name: Assemble
         run: ./gradlew assemble
       - name: Build
         run: ./gradlew build
   build_windows:
     name: Build on Windows
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '11'
+          java-package: jdk+fx
+          architecture: x64
       - name: Assemble
         run: .\gradlew.bat assemble
       - name: Build
