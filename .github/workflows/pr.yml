@@ -1,0 +1,28 @@
+name: Pull request check
+
+on:
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build_linux:
+    name: Build on Linux
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Assemble
+        run: ./gradlew assemble
+      - name: Build
+        run: ./gradlew build
+  build_windows:
+    name: Build on Windows
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Assemble
+        run: .\gradlew.bat assemble
+      - name: Build
+        run: .\gradlew.bat build
