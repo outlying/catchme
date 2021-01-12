@@ -16,7 +16,7 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: '11'
-          java-package: jdd+fx
+          java-package: jdk+fx
           architecture: x64
       - name: Assemble
         run: ./gradlew assemble
