@@ -82,7 +82,6 @@ class CatchMe(
             return false
         } else {
             val (x, y) = bobberPosition.first + 4 to bobberPosition.second + 1
-            sendMessage("Bobber position found at ($x, $y)")
 
             var previousArray: IntArray?
             var newArray: IntArray? = null
@@ -91,7 +90,7 @@ class CatchMe(
             var highestDiff = 0.0
 
             try {
-                sendMessage("Waiting for a catch")
+                sendMessage("Waiting for a catch at ($x, $y)")
                 withTimeout(20000) {
 
                     do {
@@ -148,7 +147,7 @@ class CatchMe(
             sendMessage("Bait should last for $baitTimeDelta more seconds")
             return@let // Plenty of time to expire
         }
-        sendMessage("Arpplying bait")
+        sendMessage("Applying bait")
         delay(200)
         operator.pressKeys(bait.key)
         baitExpireTime = currentTimeSeconds() + (bait.minutes * 60)
@@ -200,7 +199,7 @@ class CatchMe(
     }
 
     private fun sendMessage(message: CharSequence) {
-        GlobalScope.launch(Dispatchers.IO) {
+        GlobalScope.launch(Dispatchers.Default) {
             delay(20)
             _message.value = message.toString()
         }
