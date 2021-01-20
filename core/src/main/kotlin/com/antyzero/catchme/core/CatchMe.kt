@@ -18,8 +18,10 @@ import kotlin.math.*
 class CatchMe(
     private val throwKey: String,
     private var threshold: Double,
-    private val detectionAreaSideLength: Int = 5
+    private val detectionAreaSideLength: Int = 5,
+    private val bait: Bait?
 ) {
+    private var baitExpireTime: Long = 0
     private val operator: WowOsOperator
 
     private var windowPosition: Pair<Int, Int>
@@ -56,6 +58,8 @@ class CatchMe(
     }
 
     suspend fun run() {
+
+        useBait()
 
         val catched = catch(threshold)
 
@@ -137,6 +141,20 @@ class CatchMe(
         return true
     }
 
+
+    private suspend fun useBait() = bait?.let { bait ->
+        val baitTimeDelta = baitExpireTime - currentTimeSeconds()
+        if(baitTimeDelta > 50) {
+            sendMessage("Bait should last for $baitTimeDelta more seconds")
+            return@let // Plenty of time to expire
+        }
+        sendMessage("Arpplying bait")
+        delay(200)
+        operator.pressKeys(bait.key)
+        baitExpireTime = currentTimeSeconds() + (bait.minutes * 60)
+        delay(200)
+    }
+
     private fun areaScreenshot(centerX: Int, centerY: Int, sideLength: Int): IntArray {
         val halfSide = floor(sideLength.toDouble() / 2).toInt()
         val centerXOffset = max(centerX - halfSide, 0) + windowPosition.first
@@ -198,5 +216,7 @@ class CatchMe(
             val sum = redList.sum()
             return sum / size.toDouble()
         }
+
+        private fun currentTimeSeconds() = System.currentTimeMillis() / 1000
     }
 }
