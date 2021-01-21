@@ -20,6 +20,7 @@ import javafx.scene.layout.VBox
 import javafx.stage.Stage
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.javafx.JavaFx
 import java.time.LocalTime
 
 
@@ -136,7 +137,7 @@ class CatchMeApplication : Application() {
         val second = time.second.toString().padStart(2, '0')
         val line = "[$hour:$minute:$second] $message\n"
 
-        Platform.runLater {
+        withContext(Dispatchers.Main) {
             loggerArea.appendText(line)
         }
     }
