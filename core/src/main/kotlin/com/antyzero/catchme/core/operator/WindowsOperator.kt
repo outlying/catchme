@@ -45,7 +45,6 @@ object WindowsOperator : SharedOperator() {
                 windowRect.setRect(desktopWindow.locAndSize)
             }
         })
-        print(1)
     }
 
     override suspend fun focusWindow() {
