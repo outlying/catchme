@@ -3,6 +3,7 @@ package com.antyzero.catchme.gui
 import com.antyzero.catchme.core.Bait
 import com.antyzero.catchme.core.CatchMe
 import javafx.application.Application
+import javafx.application.Platform
 import javafx.collections.ObservableList
 import javafx.event.EventHandler
 import javafx.geometry.Insets
@@ -133,12 +134,11 @@ class CatchMeApplication : Application() {
         val hour = time.hour
         val minute = time.minute.toString().padStart(2, '0')
         val second = time.second.toString().padStart(2, '0')
-        val line = "[$hour:$minute:$second] $message"
-        val originalText = loggerArea.text
-        if (originalText.isNotBlank()) {
-            loggerArea.appendText("\n")
+        val line = "[$hour:$minute:$second] $message\n"
+
+        Platform.runLater {
+            loggerArea.appendText(line)
         }
-        loggerArea.appendText(line)
     }
 
     override fun stop() {
