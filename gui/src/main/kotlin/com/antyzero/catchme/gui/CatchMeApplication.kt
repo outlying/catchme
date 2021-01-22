@@ -3,7 +3,6 @@ package com.antyzero.catchme.gui
 import com.antyzero.catchme.core.Bait
 import com.antyzero.catchme.core.CatchMe
 import javafx.application.Application
-import javafx.application.Platform
 import javafx.collections.ObservableList
 import javafx.event.EventHandler
 import javafx.geometry.Insets
@@ -20,21 +19,31 @@ import javafx.scene.layout.VBox
 import javafx.stage.Stage
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.javafx.JavaFx
 import java.time.LocalTime
+import java.util.prefs.Preferences
 
 
 class CatchMeApplication : Application() {
 
+    private var preferences = Preferences.userNodeForPackage(this::class.java)
+
     private val applicationScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     private var fishingJob: Job? = null
 
-    private val bobberKeyField by lazy { createTextField() }
-    private val baitKeyField by lazy { createTextField() }
+    private val bobberKeyField by lazy { createTextField().apply {
+        preferences.get(PREF_BOBBER_KEY, null)?.let {
+            text = it
+            fishButton.isDisable = false
+        }
+    } }
+    private val baitKeyField by lazy { createTextField().apply {
+        preferences.get(PREF_BAIT_KEY, null)?.let { text = it }
+    }  }
     private val baitTimeField by lazy {
         createTextField(maxChars = 2).apply {
             textFormatter = OnlyDigitsFormatter
-            text = "30"
+            text = preferences.getInt(PREF_BAIT_TIME, 30).toString()
+
         }
     }
 
@@ -66,6 +75,11 @@ class CatchMeApplication : Application() {
         }
 
         fishButton.onAction = EventHandler {
+
+            preferences.put(PREF_BOBBER_KEY, bobberKeyField.text)
+            preferences.put(PREF_BAIT_KEY, baitKeyField.text)
+            preferences.putInt(PREF_BAIT_TIME, baitTimeField.text.toInt())
+
             fishingJob?.cancel()
             fishingJob = applicationScope.launch(Dispatchers.Default) {
                 try {
@@ -148,6 +162,10 @@ class CatchMeApplication : Application() {
     }
 
     companion object {
+
+        private const val PREF_BAIT_TIME = "baitTime"
+        private const val PREF_BAIT_KEY = "baitKey"
+        private const val PREF_BOBBER_KEY = "bobberKey"
 
         @JvmStatic
         fun main(args: Array<String>) {
